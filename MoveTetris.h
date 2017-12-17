@@ -18,30 +18,13 @@ using namespace std;
 #define pb(x) push_back(x)
 
 
-///////TimeOut for the move's
-mutex mtx;
-unique_lock<mutex> lck(mtx);
-condition_variable cv;
-int movei;
-void read_move(){
-    char x=readChar();
-    if('a'<=x&&x<='z')x=x-'a'+'A';
-    switch (x) {
-        case 'A': movei=0; break;//left
-        case 'D': movei=1; break;//right
-        case 'O': movei=2; break;//rotate L
-        case 'P': movei=3; break;//rotate R
-        case 'S': movei=4; break;//drop
-        default:  movei=5; break;//wrong key
-    }
-}
+
  
 bool posible(Piece A, int x,int y){
-    if(x<0||y<0)return false;
     int i,j,L=(int)A.P.size();
     for(i=0;i<L;i++)for(j=0;j<L;j++){
         if(A.P[i][j])
-            if(i+x>=Height||j+y>=Width||board[i+x][j+y])
+            if(i+x>=Height||j+y>=Width||i+x<0||j+y<0||board[i+x][j+y])
                 return false;
     }
     return true;
@@ -59,17 +42,17 @@ void deleteLine(int l){
         board[i][j]=board[i-1][j];
 }
 int deleteMultipleLines(){
-    int i,j,complete,microscore=0;
+    int i,j,complete,microScore=0;
     for(i=0;i<Height;i++){
         complete=1;
         for(j=0;j<Width;j++)
             if(!board[i][j])complete=0;
-        if(complete)deleteLine(i),microscore++;
+        if(complete)deleteLine(i),microScore++;
     }
-    return microscore;
+    return microScore;
 }
 
-bool doMove(Piece &W,int &x,int &y){
+bool doMove(Piece &W,int &x,int &y,int movei){
     Piece Wi;
     //Do the move
     changePiece(W,x,y,0);
@@ -96,19 +79,14 @@ bool doMove(Piece &W,int &x,int &y){
             while(posible(W,x+1,y))x++;
             changePiece(W,x,y,1);
             break;
-    }
-    clearScreen();
-    printBoard();
-    cv.wait_for(lck, chrono::milliseconds(300));
-
-    changePiece(W,x,y,0);
-    if(posible(W,x+1,y)){
-        x++;
-        changePiece(W,x,y,1);
-    }
-    else {
-        changePiece(W,x,y,1);
-        return false;
+        default:
+            if(posible(W,x+1,y))
+                changePiece(W,++x,y,1);
+            else {
+                changePiece(W,x,y,1);
+                return false;
+            }
+            break;
     }
     clearScreen();
     printBoard();

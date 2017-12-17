@@ -15,8 +15,7 @@
 #include <limits.h>
 #include <thread>
 #include <chrono>
-#include <mutex>
-#include <condition_variable>
+
 
 using namespace std;
 #define pb(x) push_back(x)
@@ -93,6 +92,12 @@ Piece rotateR(Piece A){
 		w.P[i][j]=A.P[L-j-1][i];
     return w;
 }
+
+
+const int Width=10,Height=22;
+int board[Height][Width];
+
+inline void cleanBoard(){ for(int x=0;x<Height;x++)for(int y=0;y<Width;y++)board[x][y]=0; }//Clean board
 
 
 

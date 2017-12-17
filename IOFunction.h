@@ -16,11 +16,15 @@
 using namespace std;
 #define pb(x) push_back(x)
 
+char readChar(){
+    system("stty raw");
+    char input = getchar();
+    system("stty cooked");
+    return input;
+}
 
-const int Width=10,Height=22;
 inline void clearScreen(){ cout<<string(100,'\n'); }
-int board[Height][Width];
-
+    
 void printBoard(){
     int i,j;
     for(i=0;i<Width+2;i++)cout<<"#";
@@ -28,21 +32,14 @@ void printBoard(){
     for(i=0;i<Height;i++){
         cout<<"#";
         for(j=0;j<Width;j++){
-            if(board[i][j])cout<<"*";
-            else cout<<"·";
+            if(board[i][j])cout<<"O";
+            else cout<<".";
         }
         cout<<"#";
         cout<<"\n";
     }
     for(i=0;i<Width+2;i++)cout<<"#";
-    cout<<"\n";
-}
-
-char readChar(){
-    system("stty raw");
-    char input = getchar();
-    system("stty cooked");
-    return input;
+    cout<<"\n\n";
 }
 
 void printMenu(){
@@ -56,9 +53,11 @@ void printMenu(){
 }
 
 void finishGame(int score){
+    clearScreen();
     cout<<"\n\n\t\t\tTETRIS\n";
     cout<<"\n\tYour final score was... "<<score<<"!!!\n";
     cout<<"\nThank you for playing this game!\n\nIf you want to play more, press any key.\n\n\n\n\n\n";
+    this_thread::sleep_for(chrono::seconds(5));
     readChar();
 }
 
