@@ -59,29 +59,29 @@ bool doMove(Piece &W,int &x,int &y,int movei){
     switch(movei){
         case 0:
             if(posible(W,x,y-1))y--;
-            changePiece(W,x,y,1);
+            changePiece(W,x,y,2);
             break;
         case 1:
             if(posible(W,x,y+1))y++;
-            changePiece(W,x,y,1);
+            changePiece(W,x,y,2);
             break;
         case 2:
             Wi=rotateL(W);
             if(posible(Wi,x,y))W=Wi;
-            changePiece(W,x,y,1);
+            changePiece(W,x,y,2);
             break;
         case 3:
             Wi=rotateR(W);
             if(posible(Wi,x,y))W=Wi;
-            changePiece(W,x,y,1);
+            changePiece(W,x,y,2);
             break;
         case 4:
             while(posible(W,x+1,y))x++;
-            changePiece(W,x,y,1);
+            changePiece(W,x,y,2);
             break;
         default:
             if(posible(W,x+1,y))
-                changePiece(W,++x,y,1);
+                changePiece(W,++x,y,2);
             else {
                 changePiece(W,x,y,1);
                 return false;

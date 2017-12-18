@@ -93,11 +93,18 @@ Piece rotateR(Piece A){
     return w;
 }
 
+Piece randomPiece(){
+    Piece W;
+    W.setP(rand()%6);
+    int k=rand()%4;
+    while(k--)W=rotateL(W);
+    return W;
+}
+Piece nextPiece;
+const int Width=10,Height=23;
+int board[Height][Width],currentScore;
 
-const int Width=10,Height=22;
-int board[Height][Width];
-
-inline void cleanBoard(){ for(int x=0;x<Height;x++)for(int y=0;y<Width;y++)board[x][y]=0; }//Clean board
+inline void resetGame(){ currentScore=0;for(int x=0;x<Height;x++)for(int y=0;y<Width;y++)board[x][y]=0; }//Clean board
 
 
 
