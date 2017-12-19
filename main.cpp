@@ -5,12 +5,11 @@
 #include "IOFunction.h"
 #include "MoveTetris.h"
 
-
 using namespace std;
 #define pb(x) push_back(x)
 
-
 int movei;
+bool newinput,onGame;
 
 void read_move(){
     char x;
@@ -38,10 +37,10 @@ int Game(){
     newinput=0;
     onGame=1;
     resetGame();
-    
+
     nextPiece=randomPiece();
     while(true){
-        
+
         //Introduce a new Piece.
         W=nextPiece;
         nextPiece=randomPiece(),x=0,y=(rand()%7);
@@ -49,18 +48,23 @@ int Game(){
         changePiece(W,x,y,2);
         clearScreen();
         printBoard();
-        
+
         while (true){
             //Wait for an action.
-            this_thread::sleep_for(chrono::milliseconds(700));
-            
+            this_thread::sleep_for(chrono::milliseconds(600));
+
             if(newinput)newinput=0;//If we had newinput, dont reset movei
             else movei=5;//else, dont read new input, so
-            
+
             if(!doMove(W,x,y,movei))break;
+            if(movei!=5){
+                this_thread::sleep_for(chrono::milliseconds(100));
+                movei=5;
+                if(!doMove(W,x,y,movei))break;
+            }
         }
         for(int i=0;i<Width;i++)if(board[0][i])break;
-        
+
         currentScore+=deleteMultipleLines();
     }
     onGame=0;
@@ -74,11 +78,9 @@ int main(){
     printMenu();
     thread th(read_move);
     while(true){
-        
         clearScreen();
         score=Game();
         gameOver(score);
     }
     th.join();
-
 }

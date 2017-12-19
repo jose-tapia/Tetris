@@ -12,23 +12,24 @@
 
 #include "tetrominoes.h"
 #include <fstream>
+#include <conio.h>
 using namespace std;
 const int MaxRecords=11;
 int minRecord;
 string namesR[MaxRecords];
 int records[MaxRecords],cntR;
-bool newinput,onGame;
-
 
 char readChar(){
-    system("stty raw");
-    char input = getchar();
-    system("stty cooked");
+    //system("stty raw");//Linux/OSX
+    char input = getch();
+    //system("stty cooked");//Linux/OSX
     if(input=='\377')return ' ';
     return input;
 }
 string readName(){
     string w;
+    getline(cin,w);
+    return w;
     char x;
     x=' ';
     w.clear();
@@ -39,8 +40,10 @@ string readName(){
     return w;
 }
 
-inline void clearScreen(){ cout<<string(100,'\n'); }
-    
+inline void clearScreen(){
+ system("cls");//   cout<<string(100,'\n');
+}
+
 void printBoard(){
     int i,j,L,startPrint=5;
     for(i=0;i<Width+2;i++)cout<<"#";
@@ -51,10 +54,10 @@ void printBoard(){
             if(board[i][j]==2)cout<<"O";
             if(board[i][j]==1)cout<<"o";
             if(board[i][j]==0)cout<<".";
-            
+
         }
         cout<<"#";
-        
+        ///Lateral screen
         if(i==startPrint)cout<<"\t\tTETRIS";
         if(i==startPrint+2)cout<<"\tActual score: "<<currentScore<<".";
         if(i==startPrint+4)cout<<"\tNext tetromino:";
@@ -66,8 +69,8 @@ void printBoard(){
                 else cout<<" ";
             }
         }
-        
-        
+
+
         cout<<"\n";
     }
     for(i=0;i<Width+2;i++)cout<<"#";
@@ -86,7 +89,8 @@ void readRecords(){
     }
     recordsFile>>cntR;
     for(i=0;i<cntR;i++){
-        recordsFile>>name;
+        getline(recordsFile,name);
+        getline(recordsFile,name);
         namesR[i]=name;
         recordsFile>>records[i];
     }
@@ -111,14 +115,14 @@ void saveNewRecord(int score){
     if(cntR<10)cntR++;
     minRecord=records[cntR-1];
     if(cntR<10)minRecord=0;
-    
+
     ofstream recordsFile;
     recordsFile.open("records.data");
     recordsFile<<cntR<<"\n";
     for(i=0;i<cntR;i++)
         recordsFile<<namesR[i]<<"\n"<<records[i]<<"\n";
     recordsFile.close();
-    
+
 }
 void HallOfFame(){
     cout<<"\n\n\t\tHall of Fame\n\n";
@@ -146,7 +150,7 @@ void gameOver(int score){
     clearScreen();
     cout<<"\n\n\t\t\tTETRIS\n";
     cout<<"\n\t  Your final score was... "<<score<<"!!!\n";
-    
+
     cout<<"\n\tThank you for playing this game!\n\n";
     if(score>=minRecord&&score>0){
         cout<<"\t  You got a record!!\n\n\tEnter your name for the Hall of Fame:";
@@ -156,8 +160,8 @@ void gameOver(int score){
     HallOfFame();
     cout<<"If you want to play more, press any key.\n\n\n\n";
 
-    this_thread::sleep_for(chrono::seconds(5));
-    
+    this_thread::sleep_for(chrono::seconds(1));
+
     readChar();
 }
 
